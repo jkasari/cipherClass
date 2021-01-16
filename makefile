@@ -1,11 +1,13 @@
-main:
-	g++ -std=c++17 main.cpp -o run
+test: testCipher
+	./testCipher
 
-test:
-	g++ -std=c++17 test.cpp -o test
-	./test
+testCypher: cipherClasses
+	g++ -std=c++17 cipherClasses.o testCipher.cpp -o testCipher
+
+cypherClasses:
+	g++ -std=c++17 -Wall -Wpedantic -c cipherClasses.cpp
 
 clean:
-	rm -rf run test
-	
-.PHONY: main test clean
+	rm -rf testCipher *.o
+
+.PHONY: test testCipher cipherClasses clean
