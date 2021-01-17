@@ -8,14 +8,19 @@ vigenereCipher::vigenereCipher(const char* keyToBe) {
   if (!keyToBe) {
     return;
   }
-  allocate(strlen(keyToBe));
   keySize = strlen(keyToBe);
-  strcpy(key, keyToBe);
+  allocate(keySize);
+  for(int i = 0; i < keySize; ++i) {
+    key[i] = indexOf(keyToBe[i] - 1);
+  }
 }
 
 vigenereCipher::vigenereCipher(const vigenereCipher& other) {
-  allocate(strlen(other.key));
-  strcpy(key, other.key);
+  keySize = other.keySize;
+  allocate(keySize);
+  for(int i = 0; i < keySize; ++i) {
+    key[i] = other.key[i];
+  }
 }
 
 
@@ -24,7 +29,10 @@ vigenereCipher::vigenereCipher(const vigenereCipher& other) {
  * deletes the |key| off of the heap
  */
 vigenereCipher::~vigenereCipher() {
-  if (key) {
+  if (key || rawKey) {
+    delete[] rawKey;
+    rawKey = nullptr;
+
     delete[] key;
     key = nullptr;
   }
@@ -34,8 +42,10 @@ vigenereCipher::~vigenereCipher() {
  * allocates a new spot on the heap for a vigenereCipher |key|
  */
 void vigenereCipher::allocate(size_t length) {
-  key = new char[length + 1];
-  key[0] = '\0';
+  rawKey = new char[length + 1];
+  rawKey[0] = '\0';
+
+  key = new uint32_t[length];
 }
 
 /**
@@ -97,7 +107,7 @@ void vigenereCipher::encrypt(char* const str, const uint32_t keyIndex) {
   if(*str == '\0') {
     return;
   }
-  *str = shiftRight(indexOf(key[keyIndex % keySize]) - 1, *str);
+  *str = shiftRight(key[keyIndex % keySize], *str);
   encrypt(str + 1, keyIndex + 1);
 }
 
@@ -106,7 +116,7 @@ void vigenereCipher::encrypt(char* const str) {
   if(!str) {
     return;
   }
-  uint32_t keyIndex = 0;
+  uint32_t keyIndex = keySize;
   encrypt(str, keyIndex);
 }
 
@@ -132,7 +142,7 @@ void vigenereCipher::decrypt(char* const str, const uint32_t keyIndex) {
   if(*str == '\0') {
     return;
   }
-  *str = shiftLeft(indexOf(key[keyIndex % keySize]) - 1, *str);
+  *str = shiftLeft(key[keyIndex % keySize], *str);
   decrypt(str + 1, keyIndex + 1);
 }
 
@@ -140,7 +150,7 @@ void vigenereCipher::decrypt(char* const str) {
   if(!str) {
     return;
   }
-  uint32_t keyIndex = 0;
+  uint32_t keyIndex = keySize;
   decrypt(str, keyIndex);
 }
 

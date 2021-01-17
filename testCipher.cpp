@@ -8,14 +8,16 @@ using namespace nuttiest;
 int main() {
 
   vigenereCipher cipher1("FISH");
-  cout << cipher1.encrypt("BLACKMAGIC") << endl;
-  cout << cipher1.decrypt("GTSJPUSNNK") << endl;
+  vigenereCipher cipher2(cipher1);
+  cout << cipher2.encrypt("BLACKMAGIC") << endl;
+  cout << cipher2.decrypt("GTSJPUSNNK") << endl;
 
   cout << "====================" << endl;
 
-  caeserCipher cipher(1);
-  cout << cipher.encrypt("BLACKMAGIC") << endl;
-  cout << cipher.decrypt("CMBDLNBHJD") << endl;
+  caeserCipher cipher3(1);
+  caeserCipher cipher4(cipher3);
+  cout << cipher4.encrypt("BLACKMAGIC") << endl;
+  cout << cipher4.decrypt("CMBDLNBHJD") << endl;
 
 
   //section("test") {
