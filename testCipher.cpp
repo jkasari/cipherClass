@@ -7,9 +7,9 @@ using namespace nuttiest;
 
 int main() {
 
-  vigenereCipher cypher1("FISH");
-  cout << cypher1.encrypt("BLACKMAGIC") << endl;
-  cout << cypher1.decrypt("GTSJPUSNNK") << endl;
+  vigenereCipher cipher1("FISH");
+  cout << cipher1.encrypt("BLACKMAGIC") << endl;
+  cout << cipher1.decrypt("GTSJPUSNNK") << endl;
 
   cout << "====================" << endl;
 
