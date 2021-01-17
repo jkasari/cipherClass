@@ -37,6 +37,7 @@ class vigenereCipher {
 
  private:
   char* key = nullptr;
+  uint64_t keySize = 0;
   static const uint32_t ALPHABET_SIZE = 28;
   static constexpr char ALPHABET[ALPHABET_SIZE] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
   void allocate(size_t);
@@ -44,6 +45,8 @@ class vigenereCipher {
   bool isInAlphabet(const char*);
   char shiftRight(const uint32_t, char);
   char shiftLeft(const uint32_t, char);
+  void encrypt(char* str, uint32_t keyIndex);
+  void decrypt(char* str, uint32_t keyIndex);
 
 };
 

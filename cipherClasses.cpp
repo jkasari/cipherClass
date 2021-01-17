@@ -9,6 +9,7 @@ vigenereCipher::vigenereCipher(const char* keyToBe) {
     return;
   }
   allocate(strlen(keyToBe));
+  keySize = strlen(keyToBe);
   strcpy(key, keyToBe);
 }
 
@@ -92,16 +93,21 @@ char vigenereCipher::shiftLeft(const uint32_t key, char charToShift) {
  * cycles through a |key| for the length of |str|. It then shifts
  * each character according to what value is in |key| on that cycle.
  */
+void vigenereCipher::encrypt(char* const str, const uint32_t keyIndex) {
+  if(*str == '\0') {
+    return;
+  }
+  *str = shiftRight(indexOf(key[keyIndex % keySize]) - 1, *str);
+  encrypt(str + 1, keyIndex + 1);
+}
+
+
 void vigenereCipher::encrypt(char* const str) {
   if(!str) {
     return;
   }
   uint32_t keyIndex = 0;
-  uint32_t keySize = strlen(key);
-  for (int i = 0; i < strlen(str); ++i) {
-    str[i] = shiftRight(indexOf(key[keyIndex % keySize]) - 1, str[i]);
-    ++keyIndex;
-  }
+  encrypt(str, keyIndex);
 }
 
 
@@ -122,16 +128,20 @@ char* vigenereCipher::encrypt(const char* str) {
  * cycles through a vector of ints |key| for the length of |str|. It then shifts
  * each character according to what value is in |key| on that cycle.
  */
+void vigenereCipher::decrypt(char* const str, const uint32_t keyIndex) {
+  if(*str == '\0') {
+    return;
+  }
+  *str = shiftLeft(indexOf(key[keyIndex % keySize]) - 1, *str);
+  decrypt(str + 1, keyIndex + 1);
+}
+
 void vigenereCipher::decrypt(char* const str) {
   if(!str) {
     return;
   }
   uint32_t keyIndex = 0;
-  uint32_t keySize = strlen(key);
-  for (int i = 0; i < strlen(str); ++i) {
-    str[i] = shiftLeft(indexOf(key[keyIndex % keySize]) - 1, str[i]);
-    ++keyIndex;
-  }
+  decrypt(str, keyIndex);
 }
 
 /**
